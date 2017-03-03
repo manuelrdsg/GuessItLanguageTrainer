@@ -1,6 +1,6 @@
 # GuessIt!: LenguageTrainer
 
-**GuessIt!** is an app developed for students of *University of Cádiz*. Devised by [Alberto Cejas Sánchez](https://www.google.com), *Manuel Palomo Duarte* and *Anke Berns*, the principal aim of it is help on the language learning process of the student.
+**GuessIt!** is an app developed for students of *University of Cádiz*. Devised by [*Alberto Cejas Sánchez*]((https://github.com/AlbertoCejas), *Manuel Palomo Duarte* and *Anke Berns*, the principal aim of it is help on the language learning process of the student.
 
 It is based on a simple game, given a definition, an article and a possible hint the student has to guess the word that is defined by the definition.
 
