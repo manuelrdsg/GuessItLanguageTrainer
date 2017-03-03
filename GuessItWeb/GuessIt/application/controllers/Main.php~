@@ -1,0 +1,97 @@
+<?php
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
+class Main extends CI_Controller
+{
+	public function __construct(){
+		parent::__construct();
+	}
+	
+	function index(){
+        	//$this->show_login();
+        	$this->show_main();
+	}
+	
+	//Funciones para mostrar vistas
+	
+	function show_login(){
+		$this->load->view('login/login_view');
+	}
+	
+	function show_register(){
+		$this->load->view('login/login_register_view');
+	}
+	
+	function show_main(){
+		$this->load->view('main/header');
+		$this->load->view('main/side_menu');
+		$this->load->view('slave_menus/slave_menu_empty');
+		$this->load->view('main/footer');
+	}
+	
+	function show_slave_definitions(){
+		$this->load->view('main/header');
+		$this->load->view('main/side_menu');
+		$this->load->view('slave_menus/slave_menu_definition');
+		$this->load->view('main/footer');
+	}
+	
+	function show_report(){
+		$this->load->view('main/header');
+		$this->load->view('main/side_menu');
+		$this->load->view('reports/report_students');
+		$this->load->view('main/footer');
+	}
+	
+	//Funciones de registro, login, cerrar sesion
+	
+	function input_login_user(){
+        
+		// Create an instance of the user model
+		$this->load->model('Login_Register_Model');
+		
+		// Grab the email and password from the form POST
+		$email = $this->input->post('email');
+		$pass  = $this->input->post('password');
+		
+		//Ensure values exist for email and pass, and validate the user's credentials
+		if ($email && $pass && $this->Login_Register_Model->validate_user($email, $pass)) {
+			// If the user is valid, redirect to the main view
+			$data = array(
+				'email' => $email,
+				'isLoggedIn' => true,
+				'per_page' => 20
+			);
+		$this->session->set_userdata($data);
+		$this->show_main();
+		} else {
+		// Otherwise show the login screen with an error message.
+			$this->show_login();
+		}
+	}
+	
+	function input_register(){
+		$this->load->model('Login_Register_Model');
+		$now = date("Y-m-d H:i:s");
+		$data_to_store = array(
+			'email' => $this->input->post('email'),
+			'password' => password_hash($this->input->post('password'),PASSWORD_DEFAULT),
+			'nombre_usuario' => $this->input->post('username'),
+			'fecha_alta' => $now,
+			'rol' => 1
+		);
+		//if the insert has returned true then we show the flash message
+		if ($this->Login_Register_Model->store_user($data_to_store)) {
+			$data['flash_message'] = TRUE;
+		} else {
+			$data['flash_message'] = FALSE;
+		}
+		$this->load->view('login/login_view');
+	}
+	
+	function logout_user(){
+		$this->session->sess_destroy();
+		$this->index();
+	}
+}

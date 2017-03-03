@@ -1,0 +1,159 @@
+
+basic.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+logo
+  rotate: false
+  xy: 1, 209
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+basic_text_area
+  rotate: false
+  xy: 1, 87
+  size: 300, 120
+  orig: 300, 120
+  offset: 0, 0
+  index: -1
+basic_question_label
+  rotate: false
+  xy: 303, 409
+  size: 200, 100
+  orig: 200, 100
+  offset: 0, 0
+  index: -1
+join_icon
+  rotate: false
+  xy: 1, 45
+  size: 160, 40
+  orig: 160, 40
+  offset: 0, 0
+  index: -1
+basic_back_button
+  rotate: false
+  xy: 303, 357
+  size: 100, 50
+  orig: 100, 50
+  offset: 0, 0
+  index: -1
+basic_back_button_p
+  rotate: false
+  xy: 303, 305
+  size: 100, 50
+  orig: 100, 50
+  offset: 0, 0
+  index: -1
+basic_save_button
+  rotate: false
+  xy: 303, 253
+  size: 100, 50
+  orig: 100, 50
+  offset: 0, 0
+  index: -1
+basic_send_button
+  rotate: false
+  xy: 303, 201
+  size: 100, 50
+  orig: 100, 50
+  offset: 0, 0
+  index: -1
+basic_button_idle
+  rotate: false
+  xy: 405, 357
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+basic_button_push
+  rotate: false
+  xy: 303, 149
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+basic_group_idle
+  rotate: false
+  xy: 405, 305
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+basic_group_push
+  rotate: false
+  xy: 303, 97
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+basic_stats_label
+  rotate: false
+  xy: 405, 253
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+basic_window_bg
+  rotate: false
+  xy: 405, 201
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+report
+  rotate: false
+  xy: 1, 23
+  size: 80, 20
+  orig: 80, 20
+  offset: 0, 0
+  index: -1
+search_icon
+  rotate: false
+  xy: 163, 45
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1
+basic_label
+  rotate: false
+  xy: 457, 387
+  size: 40, 20
+  orig: 40, 20
+  offset: 0, 0
+  index: -1
+check
+  rotate: false
+  xy: 355, 179
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+puntuacion
+  rotate: false
+  xy: 1, 1
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+uncheck
+  rotate: false
+  xy: 83, 23
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+selection
+  rotate: false
+  xy: 205, 65
+  size: 10, 20
+  orig: 10, 20
+  offset: 0, 0
+  index: -1
+cursor
+  rotate: false
+  xy: 457, 367
+  size: 9, 18
+  orig: 9, 18
+  offset: 0, 0
+  index: -1

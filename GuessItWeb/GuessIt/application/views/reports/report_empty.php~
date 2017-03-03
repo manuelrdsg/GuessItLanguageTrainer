@@ -1,0 +1,8 @@
+<div class="col-md-10">
+<div class="container-fluid">
+	<ul class="nav nav-tabs nav-justified">
+		<li role="presentation" > <a href="#"> Informe por alumnos </a> </li>
+		<li role="presentation" > <a href="#"> Informe por definiciones </a> </li>
+	</ul>
+</div>
+</div>

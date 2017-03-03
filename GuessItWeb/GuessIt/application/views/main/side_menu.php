@@ -1,0 +1,8 @@
+<div class="row">
+<div class="col-md-2">
+	<ul class="nav nav-pills nav-stacked">
+		<li role="presentation"><a href="<?php echo base_url('index.php/Main/show_report')?>"> Reports </a></li>
+		<li role="presentation"><a href="<?php echo base_url('index.php/Main/show_slave_definitions')?>"> Definitions </a></li>
+		<li role="presentation"><a href="#"> Students </a></li>
+	</ul>
+</div>
