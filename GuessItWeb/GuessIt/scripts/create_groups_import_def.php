@@ -16,6 +16,10 @@
 		echo "<option value=".$row['id'].">".$row['nombre']."</option>";
 	}
 	echo '</select>';
+	echo '<select name="images">';
+	echo "<option value=\"true\">With Images</option>";
+	echo "<option value=\"false\">Without Images</option>";
+	echo '</select>';
 	echo '<button type="submit" class="btn btn-primary">Go!</button>';
 	echo '</div>';
 	echo '</div>';

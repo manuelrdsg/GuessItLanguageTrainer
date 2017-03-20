@@ -1,5 +1,5 @@
 <div class="col-md-9">
-	<?php echo form_open('index.php/Main/store_definition','class="form"');?>
+	<?php echo form_open_multipart('index.php/Main/store_definition','class="form"');?>
     <div class="form-group">
       <label class="control-label col-sm-2" for="level">Level:</label>
       <div class="col-sm-10">
@@ -33,7 +33,7 @@
   <div class="form-group">
       <label class="control-label col-sm-2" for="image">Image:</label>
       <div class="col-sm-10">
-        <input type="file" class="form-control" name="image" accept=".jpg">
+        <input type="file" class="form-control" name="image" accept=".bmp">
       </div>
   </div>
 	<?php include('scripts/select_category_definition.php'); ?>

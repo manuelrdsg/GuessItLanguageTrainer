@@ -290,10 +290,24 @@ class Main extends CI_Controller
 		$this->load->view('content/teacher/add_definitions_form',$data);
 		$this->load->view('main/teacher/footer');
 	}
-	
+
 	function store_definition(){
 		$this->load->model('Teacher_Model');
 		$now = date("Y-m-d H:i:s");
+
+		$config['upload_path']   = $_SERVER['DOCUMENT_ROOT'].'/GuessIt/uploads'; 
+        $config['allowed_types'] = 'png|bmp'; 
+        $config['max_size']      = 2048; 
+        $config['max_width']     = 1024; 
+        $config['max_height']    = 768;  
+		$config['file_name'] 	 = $this->input->post('word');
+        $this->load->library('upload', $config);
+		if( ! $this->upload->do_upload('image')) {
+			print_r($this->upload->display_errors());
+			echo '<div class="alert alert-warning"> <?php $this->upload->display_errors() ?> </div>';
+		}
+
+
 		$data_to_store = array(
 			'nivel' => $this->input->post('level'),
 			'palabra' => $this->input->post('word'),
@@ -305,7 +319,7 @@ class Main extends CI_Controller
 			'id_usuario' => $this->input->post('uid'),
 			'fecha' => $now,
 			'validar' => 1,
-			'imagen' => $this->input->post('image')
+			'imagen' =>  $config['upload_path'].'/'.$config['file_name']
 		);
 		$this->Teacher_Model->store_def($data_to_store);
 		$this->add_definitions();
@@ -325,6 +339,7 @@ class Main extends CI_Controller
 		$this->load->view('content/teacher/select_group_import',$data);
 		$this->load->view('main/teacher/footer');
 	}
+
 	
 	function show_import_definitions(){
 		$this->load->model('Login_Register_Model');
@@ -337,12 +352,107 @@ class Main extends CI_Controller
 		$this->load->view('slave_menus/teacher/slave_menu_definition');
 		$this->load->view('content/teacher/select_group_import',$data);
 		$id_grupo = $this->input->post('grupo_seleccionado');
+		$images = $this->input->post('images');
 		$data = array(
 			'id_grupo' => $id_grupo,
+			'id_docente' => $id_profesor->id,
+			'images' => $images
+		);
+
+		if($images == 'true') {
+			$this->load->view('content/teacher/import_images',$data);
+		} else {
+			$this->load->view('content/teacher/import_definitions',$data);
+		}
+
+		$this->load->view('main/teacher/footer');
+	}
+
+
+	function store_images() {
+
+		$this->load->model('Login_Register_Model');
+		$id_profesor = $this->Login_Register_Model->get_teacher_id($this->session->userdata('email'));
+		$data = array(
 			'id_docente' => $id_profesor->id
 		);
-		$this->load->view('content/teacher/import_definitions',$data);
-		$this->load->view('main/teacher/footer');
+
+		$this->load->view('main/teacher/header');
+		$this->load->view('main/teacher/side_menu');
+		$this->load->view('slave_menus/teacher/slave_menu_definition');
+		$this->load->view('content/teacher/select_group_import',$data);
+		$this->load->view('content/teacher/import_success');
+
+
+		$config['upload_path']   = $_SERVER['DOCUMENT_ROOT'].'/GuessIt/uploads/zip'; 
+        $config['allowed_types'] = 'zip'; 
+        //$config['max_size']      = 2048;  
+		//$config['file_name'] 	 = $this->input->post('word');
+        $this->load->library('upload', $config);
+		if( ! $this->upload->do_upload('zip')) {
+			print_r($this->upload->display_errors());
+			echo '<div class="alert alert-warning"> <?php $this->upload->display_errors() ?> </div>';
+		}
+		$upload_data = $this->upload->data();
+
+		$zip = new ZipArchive;
+		$filename = $_SERVER['DOCUMENT_ROOT'].'/GuessIt/uploads/zip/'.$upload_data['file_name'];
+		$res = $zip->open($filename);
+
+		if($res==TRUE) {  
+			$zip->extractTo($_SERVER['DOCUMENT_ROOT'].'/GuessIt/uploads');
+			$zip->close();
+
+			$convert_command = 'mogrify -format png '.$_SERVER['DOCUMENT_ROOT'].'/GuessIt/uploads/*';
+			$script_delete = 'sh '.$_SERVER['DOCUMENT_ROOT'].'/GuessIt/scripts/delete.sh';
+
+			exec($convert_command);
+			echo exec($script_delete);
+		}
+
+		$id_grupo = $this->input->post('id_grupo');
+		$id_docente = $this->input->post('id_docente');
+		
+		include($_SERVER['DOCUMENT_ROOT'].'/GuessIt/utils/db_config.php');
+		$mysqli = $db;
+		mysqli_query($mysqli,"SET NAMES 'utf8'");
+
+		$get_cat_sql = "SELECT * FROM categoria WHERE id_aula='".$id_grupo."'";
+		$res_cat = mysqli_query($mysqli, $get_cat_sql);
+		$fname = $_FILES['sel_file']['name'];
+		$chk_ext = explode(".",$fname);
+		if(strtolower(end($chk_ext)) == "csv"){
+			$filename = $_FILES['sel_file']['tmp_name'];
+			$handle = fopen($filename,'r');
+			while(($data = fgetcsv($handle, 1000, ",")) !== FALSE){
+				if(empty($data[0])){
+					$data[0] = " ";
+				}
+				while($row = mysqli_fetch_assoc($res_cat)){
+					if($row['nombre'] == $data[3]){
+						$data[3] = $row['id'];
+					}
+				}
+				
+
+				if($data[5] == 'jpg') {
+					$image = $_SERVER['DOCUMENT_ROOT'].'/GuessIt/uploads/'.$data[1];
+				} else {
+					$image = null;
+				}
+
+				$res_cat = mysqli_query($mysqli, $get_cat_sql);
+
+				$now = date("Y-m-d H:i:s");
+				$sql = "INSERT INTO definiciones (nivel, palabra, articulo, frase, pista, id_categoria, id_aula, id_usuario, fecha, validar, imagen) VALUES ('$data[2]','$data[1]','$data[0]','$data[4]','$data[5]','$data[3]','$id_grupo','$id_docente','$now','1','$image')";
+				mysqli_query($mysqli, $sql);
+			}
+			
+			fclose($handle);
+		}
+		mysqli_close($mysqli);
+
+
 	}
 
 	// %%%%%%%%%%%%%%% MODIFY DEFINITIONS %%%%%%%%%%%%%%%%%%
@@ -432,7 +542,22 @@ class Main extends CI_Controller
 		$id_grupo = $this->input->post('gid');
 		$nivel = $this->input->post('lvl');
 		$categoria = $this->input->post('cat');
-		$definition_image = $this->input->post('image');
+		
+		$config['upload_path']   = $_SERVER['DOCUMENT_ROOT'].'/GuessIt/uploads'; 
+        $config['allowed_types'] = 'png|bmp'; 
+        $config['max_size']      = 2048; 
+        $config['max_width']     = 1024; 
+        $config['max_height']    = 768;  
+		$config['file_name'] 	 = $this->input->post('word');
+		$config['overrite'] 	 = true;
+        $this->load->library('upload', $config);
+		if( ! $this->upload->do_upload('image')) {
+			print_r($this->upload->display_errors());
+			echo '<div class="alert alert-warning"> <?php $this->upload->display_errors() ?> </div>';
+		}
+
+		$image =  $config['upload_path'].'/'.$config['file_name'];
+		
 
 		$data = array(
 			'id' => $definition_id,
@@ -440,7 +565,7 @@ class Main extends CI_Controller
 			'articulo' => $definition_article,
 			'frase' => $definition_sentence,
 			'pista' => $definition_hint,
-			'imagen' => $definition_image
+			'imagen' => $image
 		);
 		$this->load->model('Teacher_Model');
 		$this->Teacher_Model->update_def($data);

@@ -1,7 +1,7 @@
 <?php
 	
 	include($_SERVER['DOCUMENT_ROOT'].'/GuessIt/utils/db_config.php');	
-	$link = $db_mysql;
+	$link = mysql_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD) or die('No se pudo conectar: ' . mysql_error());
 	
 	//echo 'Conecxion exitosa';
 	mysql_select_db('guessit') or die('No se pudo seleccionar la base de datos');

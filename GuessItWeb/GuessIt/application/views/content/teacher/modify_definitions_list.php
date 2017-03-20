@@ -7,11 +7,15 @@ echo '<div class="col-md-9">';
 	$mysqli = $db;
 	mysqli_query($mysqli,"SET NAMES 'utf8'");
 
-	$sql = "SELECT id, palabra, articulo, frase, pista FROM definiciones WHERE id_usuario = ".$id_docente." AND id_aula = ".$id_grupo." AND nivel = ".$nivel." AND id_categoria = ".$categoria;
+
+	$sql = "SELECT id, palabra, articulo, frase, pista, imagen FROM definiciones WHERE id_usuario = ".$id_docente." AND id_aula = ".$id_grupo." AND nivel = ".$nivel." AND id_categoria = ".$categoria;
 
 	$result_definitions = mysqli_query($mysqli, $sql);
 
 	foreach($result_definitions as $row){
+
+		$rowimage = mysqli_fetch_array($result_definitions);
+
 		echo form_open('index.php/Main/show_modify_definitions_form','class="form"');
 		echo '<input type="hidden" class="form-control" name="did" value="'.$row['id'].'">';
 		echo '<input type="hidden" class="form-control" name="gid" value="'.$id_grupo.'">';

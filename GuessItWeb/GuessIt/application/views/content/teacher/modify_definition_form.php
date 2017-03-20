@@ -11,7 +11,7 @@
 
 	$definition = mysqli_query($mysqli, $sql);
 
-	echo form_open('index.php/Main/update_definition','class="form"');
+	echo form_open_multipart('index.php/Main/update_definition','class="form"');
 	echo '<input type="hidden" class="form-control" name="gid" value="'.$id_grupo.'">';
 	echo '<input type="hidden" class="form-control" name="lvl" value="'.$nivel.'">';
 	echo '<input type="hidden" class="form-control" name="cat" value="'.$categoria.'">';
@@ -41,11 +41,11 @@
         			echo "<input type=\"text\" class=\"form-control\" name=\"hint\" value='".$row['pista']."'>";
       			echo '</div>';
     		echo '</div>';
-
+		
 		echo '<div class="form-group">';
       			echo '<label class="control-label col-sm-2" for="image">Image:</label>';
       			echo '<div class="col-md-10">';
-        			echo "<input type=\"file\" class=\"form-control\" name=\"image\" accept=\".jpg\" value='".$row['imagen']."'>";
+        			echo "<input type=\"file\" class=\"form-control\" name=\"image\" accept=\".bmp\" value='".$row['imagen']."'>";
       			echo '</div>';
     		echo '</div>';
 

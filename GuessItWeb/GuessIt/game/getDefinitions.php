@@ -2,7 +2,7 @@
 		
 		include($_SERVER['DOCUMENT_ROOT'].'/GuessIt/utils/db_config.php');
 		
-		$link = $db_mysql;
+		$link = mysql_connect(DB_SERVER, DB_USERNAME, DB_PASSWORD) or die('No se pudo conectar: ' . mysql_error());
 		
 		mysql_select_db('guessit') or die('No se pudo seleccionar la base de datos');
 		mysql_query ( "SET NAMES 'utf8'" );
@@ -55,21 +55,41 @@
 
 		*/
 		
-		$sql = "SELECT id, nivel, palabra, articulo, frase, pista, id_categoria, id_aula FROM definiciones WHERE id_aula = '".$id_aula."' AND nivel = '".$level."'".$cadena_sql.") ORDER BY RAND() LIMIT 10";
-		
+		$sql = "SELECT id, nivel, palabra, articulo, frase, pista, id_categoria, id_aula, imagen FROM definiciones WHERE id_aula = '".$id_aula."' AND nivel = '".$level."'".$cadena_sql.") ORDER BY RAND() LIMIT 10";
 		$result = mysql_query($sql);
 		
 		
 		
 		if(count($result) > 0){
 			while($row = mysql_fetch_assoc($result)){
+				$imagen = mysql_fetch_array($row);
 				if(empty($row['articulo'])){
-					$string_result .= $row['id']."|".$row['nivel']."|".$row['palabra']."| |".$row['frase']."|".$row['pista']."|".$row['id_categoria']."|".$row['id_aula']."|";
+					if(empty($row['imagen'])){
+						$string_result .= $row['id']."|".$row['nivel']."|".$row['palabra']."| |".$row['frase']."|".$row['pista']."|".$row['id_categoria']."|".$row['id_aula']."|";
+					}else{
+						$string_result .= $row['id']."|".$row['nivel']."|".$row['palabra']."| |".$row['frase']."|".$row['pista']."|".$row['id_categoria']."|".$row['id_aula']."|".$row['imagen']."|";
+					}
 				}else{
-					$string_result .= $row['id']."|".$row['nivel']."|".$row['palabra']."|".$row['articulo']."|".$row['frase']."|".$row['pista']."|".$row['id_categoria']."|".$row['id_aula']."|";
+					if(empty($row['imagen'])){
+						$string_result .= $row['id']."|".$row['nivel']."|".$row['palabra']."|".$row['articulo']."|".$row['frase']."|".$row['pista']."|".$row['id_categoria']."|".$row['id_aula']."|";
+					}else{
+						$string_result .= $row['id']."|".$row['nivel']."|".$row['palabra']."|".$row['articulo']."|".$row['frase']."|".$row['pista']."|".$row['id_categoria']."|".$row['id_aula']."|".$row['imagen']."|";
+					}
 				}
 			}
 		}
+
+/*		if(count($result) > 0){
+				while($row = mysql_fetch_assoc($result)){
+					if(empty($row['articulo'])){
+						$string_result .= $row['id']."|".$row['nivel']."|".$row['palabra']."| |".$row['frase']."|".$row['pista']."|".$row['id_categoria']."|".$row['id_aula']."|";
+					}else{
+						$string_result .= $row['id']."|".$row['nivel']."|".$row['palabra']."|".$row['articulo']."|".$row['frase']."|".$row['pista']."|".$row['id_categoria']."|".$row['id_aula']."|";
+					}
+				}
+			}*/
+
+			
 		mysql_close($link);
 		echo $string_result;
 ?>
