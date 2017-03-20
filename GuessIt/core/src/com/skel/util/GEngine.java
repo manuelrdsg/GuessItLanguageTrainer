@@ -57,6 +57,8 @@ public class GEngine {
 
     public String getArticle() {return engine_definitions.get(current_def).getArticulo(); }
 
+    public String getImage() {return engine_definitions.get(current_def).getImage(); }
+
     public boolean endRound(){
         return current_def==max_def;
     }

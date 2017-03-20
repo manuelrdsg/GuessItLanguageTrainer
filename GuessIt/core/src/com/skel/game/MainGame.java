@@ -1,10 +1,8 @@
 package com.skel.game;
 
 import com.badlogic.gdx.Game;
-import sun.applet.Main;
 import com.skel.util.HintSpeech;
 
-import javax.swing.*;
 
 /**
  * Created by juanm on 27/01/2016.
