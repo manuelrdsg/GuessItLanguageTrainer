@@ -49,6 +49,8 @@ public class MenuGameScreen implements Screen {
             newDefButton.setVisible(false);
         }
 
+        newDefButton.setVisible(true);
+
         playButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 g.setScreen(new ConfigGameScreen(g,userInfo, grupo, skin, toSpeech));

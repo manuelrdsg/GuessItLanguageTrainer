@@ -6,13 +6,13 @@ package com.skel.util;
 public class Definition {
 
     private int id, lv, id_categoria, id_aula;
-    private String palabra, articulo, frase, pista, image;
+    private String palabra, articulo, frase, pista;
 
     public Definition(){
 
     }
 
-    public Definition(int id, int lv, String palabra, String articulo, String frase, String pista, int id_categoria, int id_aula, String image){
+    public Definition(int id, int lv, String palabra, String articulo, String frase, String pista, int id_categoria, int id_aula){
         this.id = id;
         this.lv = lv;
         this.id_categoria = id_categoria;
@@ -21,7 +21,6 @@ public class Definition {
         this.articulo = articulo;
         this.frase = frase;
         this.pista = pista;
-        this.image = image;
     }
 
     public void setInfo(int id, int lv, String palabra, String articulo, String frase, String pista, int id_categoria, int id_aula){
@@ -43,5 +42,4 @@ public class Definition {
     public String getArticulo(){return articulo;}
     public String getFrase(){return frase;}
     public String getPista(){return pista;}
-    public String getImage(){return image;}
 }

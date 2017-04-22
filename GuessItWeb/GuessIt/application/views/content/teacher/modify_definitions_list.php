@@ -8,7 +8,7 @@ echo '<div class="col-md-9">';
 	mysqli_query($mysqli,"SET NAMES 'utf8'");
 
 
-	$sql = "SELECT id, palabra, articulo, frase, pista, imagen FROM definiciones WHERE id_usuario = ".$id_docente." AND id_aula = ".$id_grupo." AND nivel = ".$nivel." AND id_categoria = ".$categoria;
+	$sql = "SELECT id, palabra, articulo, frase, pista FROM definiciones WHERE id_usuario = ".$id_docente." AND id_aula = ".$id_grupo." AND nivel = ".$nivel." AND id_categoria = ".$categoria;
 
 	$result_definitions = mysqli_query($mysqli, $sql);
 

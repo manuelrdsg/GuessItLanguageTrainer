@@ -83,6 +83,8 @@ public class UserInfo {
     }
 
     public boolean canAddDefinition(String group_id){
+        Integer a = new Integer(prefs.getInteger(group_id, 0));
+        Gdx.app.log("Prefs", a.toString());
         if(prefs.getInteger(group_id, 0) >= 50){
             //prefs.putInteger("defplayed", 0);
             //prefs.flush();

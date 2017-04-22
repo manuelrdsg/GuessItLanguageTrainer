@@ -7,7 +7,7 @@
 	$mysqli = $db;
 	mysqli_query($mysqli,"SET NAMES 'utf8'");
 
-	$sql = "SELECT id, palabra, articulo, frase, pista, imagen FROM definiciones WHERE id=".$definicion;
+	$sql = "SELECT id, palabra, articulo, frase, pista FROM definiciones WHERE id=".$definicion;
 
 	$definition = mysqli_query($mysqli, $sql);
 
@@ -45,7 +45,7 @@
 		echo '<div class="form-group">';
       			echo '<label class="control-label col-sm-2" for="image">Image:</label>';
       			echo '<div class="col-md-10">';
-        			echo "<input type=\"file\" class=\"form-control\" name=\"image\" accept=\".bmp\" value='".$row['imagen']."'>";
+        			echo "<input type=\"file\" class=\"form-control\" name=\"image\" accept=\".bmp\" "'>";
       			echo '</div>';
     		echo '</div>';
 

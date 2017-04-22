@@ -302,9 +302,10 @@ class Main extends CI_Controller
         $config['max_height']    = 768;  
 		$config['file_name'] 	 = $this->input->post('word');
         $this->load->library('upload', $config);
+
+
 		if( ! $this->upload->do_upload('image')) {
 			print_r($this->upload->display_errors());
-			echo '<div class="alert alert-warning"> <?php $this->upload->display_errors() ?> </div>';
 		}
 
 
@@ -318,8 +319,7 @@ class Main extends CI_Controller
 			'id_aula' => $this->input->post('gid'),
 			'id_usuario' => $this->input->post('uid'),
 			'fecha' => $now,
-			'validar' => 1,
-			'imagen' =>  $config['upload_path'].'/'.$config['file_name']
+			'validar' => 1
 		);
 		$this->Teacher_Model->store_def($data_to_store);
 		$this->add_definitions();
@@ -444,7 +444,7 @@ class Main extends CI_Controller
 				$res_cat = mysqli_query($mysqli, $get_cat_sql);
 
 				$now = date("Y-m-d H:i:s");
-				$sql = "INSERT INTO definiciones (nivel, palabra, articulo, frase, pista, id_categoria, id_aula, id_usuario, fecha, validar, imagen) VALUES ('$data[2]','$data[1]','$data[0]','$data[4]','$data[5]','$data[3]','$id_grupo','$id_docente','$now','1','$image')";
+				$sql = "INSERT INTO definiciones (nivel, palabra, articulo, frase, pista, id_categoria, id_aula, id_usuario, fecha, validar) VALUES ('$data[2]','$data[1]','$data[0]','$data[4]','$data[5]','$data[3]','$id_grupo','$id_docente','$now','1')";
 				mysqli_query($mysqli, $sql);
 			}
 			
@@ -564,8 +564,7 @@ class Main extends CI_Controller
 			'palabra' => $definition_word,
 			'articulo' => $definition_article,
 			'frase' => $definition_sentence,
-			'pista' => $definition_hint,
-			'imagen' => $image
+			'pista' => $definition_hint
 		);
 		$this->load->model('Teacher_Model');
 		$this->Teacher_Model->update_def($data);

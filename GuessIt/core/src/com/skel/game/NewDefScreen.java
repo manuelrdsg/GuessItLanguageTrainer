@@ -54,6 +54,7 @@ public class NewDefScreen implements Screen, Net.HttpResponseListener {
     private int actualLevel = 0;
     private boolean sendingDefinition;
     private int actualCategory = 0;
+    private boolean noDefinitions = false;
 
     SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -64,7 +65,8 @@ public class NewDefScreen implements Screen, Net.HttpResponseListener {
     public void generateWord(){
         HashMap<String, String> parameters = new HashMap<String, String>();
         parameters.put("id_aula",String.valueOf(grupo.getId()));
-        String url = utilidades.getUrl()+"getDefWord.php?";
+        //String url = utilidades.getUrl()+"getDefWord.php?";
+        String url = utilidades.getUrl()+"getDefWord_te_def.php?";
         httpsolicitud = new Net.HttpRequest(httpMethod);
         httpsolicitud.setUrl(url);
         httpsolicitud.setContent(HttpParametersUtils.convertHttpParameters(parameters));
@@ -93,7 +95,10 @@ public class NewDefScreen implements Screen, Net.HttpResponseListener {
         scrollTable = new Table();
 
         word = new Label("", skin.get("newdefword", Label.LabelStyle.class));
-        wordLabel = new Label("[RED]Word:", skin.get("newdefword", Label.LabelStyle.class));
+        if(noDefinitions)
+            wordLabel = new Label("[RED]No quedan definiciones. Vuelve mañana!", skin.get("newdefword", Label.LabelStyle.class));
+        else
+            wordLabel = new Label("[RED]Word:", skin.get("newdefword", Label.LabelStyle.class));
         article = new Label("", skin.get("newdefcat", Label.LabelStyle.class));
         articleLabel = new Label("[BLACK]Article:", skin.get("newdefword", Label.LabelStyle.class));
         sentence = new TextArea("", skin.get("default", TextField.TextFieldStyle.class));
@@ -163,16 +168,16 @@ public class NewDefScreen implements Screen, Net.HttpResponseListener {
         scrollTable.row();
         scrollTable.add(hint).width(Gdx.graphics.getWidth() * 0.8f).height(Gdx.graphics.getHeight() * 0.2f).colspan(7);
         scrollTable.row();
-        if(prefs.getBoolean("NDexist")){
-            actualLevel = prefs.getInteger("NDlvl");
-            word.setText("[RED]"+prefs.getString("NDword"));
-            article.setText("[BLACK]"+prefs.getString("NDarticle"));
-            actualCategory = prefs.getInteger("NDcat");
-            category.setText("[BLACK]"+prefs.getString("NDcatN"));
-            level.setText("[BLACK]"+String.valueOf(actualLevel));
-        }else{
+//        if(prefs.getBoolean("NDexist")){
+//            actualLevel = prefs.getInteger("NDlvl");
+//            word.setText("[RED]"+prefs.getString("NDword"));
+//            article.setText("[BLACK]"+prefs.getString("NDarticle"));
+//            actualCategory = prefs.getInteger("NDcat");
+//            category.setText("[BLACK]"+prefs.getString("NDcatN"));
+//            level.setText("[BLACK]"+String.valueOf(actualLevel));
+//        }else{
             generateWord();
-        }
+       // }
         sendButton = new ImageTextButton(locale.send(), skin.get("send", ImageTextButton.ImageTextButtonStyle.class));
         sendButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -240,7 +245,19 @@ public class NewDefScreen implements Screen, Net.HttpResponseListener {
     public void handleHttpResponse(Net.HttpResponse httpResponse) {
         final String ResponseBefore = httpResponse.getResultAsString();
         final String Response = new String(ResponseBefore.getBytes(), Charset.forName("UTF-8"));
+        Gdx.app.log("Redefine", Response);
         Gdx.app.log("nueva def", Response);
+        if(Response.length() == 0) {
+            wordLabel.setText("[RED] We have run out of definitions! \n Come back tomorrow!");
+            category.setVisible(false);
+            article.setVisible(false);
+            level.setVisible(false);
+            sendButton.setVisible(false);
+            sentence.setVisible(false);
+            hint.setVisible(false);
+        }
+
+
         if(sendingDefinition){
             userInfo.addedNewDef(String.valueOf(grupo.getId()));
             sendingDefinition = false;
@@ -252,6 +269,7 @@ public class NewDefScreen implements Screen, Net.HttpResponseListener {
                 @Override
                 public void run() {
                     StringTokenizer stroke = new StringTokenizer(Response, ";");
+                    Gdx.app.log("Redefine", stroke.toString());
                     if(stroke.hasMoreTokens()) {
                         actualLevel = Integer.parseInt(stroke.nextToken());
                         level.setText("[BLACK]"+String.valueOf(actualLevel));

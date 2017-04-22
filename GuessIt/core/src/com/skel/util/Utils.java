@@ -297,10 +297,6 @@ public class Utils {
     }
 
     public String getUrl(){
-        //return "http://192.168.1.107/GuessIt/game/";
-        //return "http://localhost/GuessIt/game/";
-        //return "http://guessit.yohosts.info/game/";
-        //return "http://164.132.193.133/GuessIt/game/";
-        return "http://178.62.108.110//GuessIt/game/";
+        return "url";
     }
 }

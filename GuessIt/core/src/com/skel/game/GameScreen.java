@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.net.HttpParametersUtils;
@@ -23,6 +24,10 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.skel.util.*;
+import com.badlogic.gdx.Net.HttpRequest;
+import com.badlogic.gdx.Net.HttpResponse;
+import com.badlogic.gdx.Net.HttpResponseListener;
+import com.badlogic.gdx.Net;
 
 
 import java.io.InputStream;
@@ -84,6 +89,10 @@ public class GameScreen implements Screen, Net.HttpResponseListener {
     Texture texture;
     TextField answerText;
     TextButton hintSpeech;
+
+    HttpRequest httpRequest;
+
+    SpriteBatch batch;
 
 
     private CheckBox questOne, questTwo;
@@ -257,6 +266,7 @@ public class GameScreen implements Screen, Net.HttpResponseListener {
                 savedWindow.setVisible(true);
             }
         });
+
         rateWindow.add(resultDefLabel).width(Gdx.graphics.getWidth()*0.8f).height(Gdx.graphics.getHeight()*0.3f).colspan(2);
         rateWindow.row();
         rateWindow.add(questionLabel).width(Gdx.graphics.getWidth()*0.8f).height(Gdx.graphics.getHeight()*0.2f).colspan(2);
@@ -509,29 +519,53 @@ public class GameScreen implements Screen, Net.HttpResponseListener {
                         hintLabel.setVisible(false);
                     }
 
-                    if(engine.getHint().equals("jpg")) {
+                    if(engine.getHint().equals("image")) {
+                            hintLabel.setText("LOADING...");
 
-                        byte[] bytes = new byte[200 * 1024]; // assuming the content is not bigger than 200kb.
-                        int numBytes = getImage(bytes, "http://www.badlogicgames.com/wordpress/wp-content/uploads/2012/01/badlogic-new.png");
-                        Gdx.app.log("numBytes", String.valueOf(numBytes));
-                        Gdx.app.log("bytes", bytes.toString());
-                        if (numBytes != 0) {
-                            // load the pixmap, make it a power of two if necessary (not needed for GL ES 2.0!)
-                            pixm = new Pixmap(bytes, 0, numBytes);
-                            final int originalWidth = pixm.getWidth();
-                            final int originalHeight = pixm.getHeight();
-                            int width = MathUtils.nextPowerOfTwo(pixm.getWidth());
-                            int height = MathUtils.nextPowerOfTwo(pixm.getHeight());
-                            final Pixmap potPixmap = new Pixmap(width, height, pixm.getFormat());
-                            potPixmap.drawPixmap(pixm, 0, 0, 0, 0, pixm.getWidth(), pixm.getHeight());
-                            texture = new Texture(potPixmap);
-                            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-                            image = new TextureRegion(texture, 0, 0, originalWidth, originalHeight);
-                        }
+                            String url = "http://164.132.193.133/GuessItMaritimo/uploads/" + engine.getDefinition().getPalabra().replace(" ","%20") + ".png";
+                            //String url = "http://164.132.193.133/GuessItMaritimo/uploads/boat.png";
 
-                        hintImage = new Image(image);
-                        hintImage.setVisible(true);
-                        hintLabel.setVisible(false);
+                            String httpMethod = Net.HttpMethods.GET;
+
+                            Gdx.app.log("IMAGEN", url);
+
+                            httpRequest = new HttpRequest(httpMethod);
+                            httpRequest.setUrl(url);
+                            httpRequest.setContent(null);
+
+                            Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
+                                public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                                    final byte[] rawImageBytes = httpResponse.getResult();
+                                    Gdx.app.log("IMAGEN", "Descargando...");
+                                    Gdx.app.postRunnable(new Runnable() {
+                                        public void run() {
+                                            Pixmap pixmap = new Pixmap(rawImageBytes, 0, rawImageBytes.length);
+
+                                            texture = new Texture(pixmap);
+                                            hintImage = new Image(texture);
+
+                                            hintImage.setVisible(true);
+                                            hintLabel.setVisible(false);
+
+                                           // texture.dispose();
+                                            Gdx.app.log("Image", texture.toString());
+
+                                       }
+                                   });
+                                }
+
+                                public void failed(Throwable t) {
+                                    //status = "failed";
+                                    //do stuff here based on the failed attempt
+                                }
+
+                                public void cancelled() {
+                                    //status = "candelled";
+                                }
+                            });
+
+                        //hintImage = new Image(texture);
+
                     }
                 }
             }
@@ -546,22 +580,9 @@ public class GameScreen implements Screen, Net.HttpResponseListener {
         hintWindow.add(hintLabel).width(Gdx.graphics.getWidth()*0.8f).height(Gdx.graphics.getHeight()*0.2f).colspan(3);
         hintWindow.row();
 
-//        hintImage = new Image(new Texture(Gdx.files.internal("images/duck.png")));
-//        hintImage.setSize(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
-//        hintImage.addListener(new ClickListener() {
-//            public void clicked(InputEvent event, float x, float y) {
-//                imageWindow.setVisible(true);
-//                hintWindow.setVisible(false);
-//            }
-//        });
-//        if(true) {//engine.getImage() == null) {
-//            hintImage = new Image(new Texture(Gdx.files.internal("images/duck.png")));
-//        }
-//        else {
-//        }
-//        hintImage = new Image(new Texture(Gdx.files.internal("images/duck.png")));
-        Gdx.app.log("HintImage", hintImage.toString());
+        //hintImage = new Image(new Texture(Gdx.files.internal("images/duck.png")));
         hintImage.setSize(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
+        Gdx.app.log("HintImage", hintImage.toString());
         hintImage.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 imageWindow.setVisible(true);
@@ -578,6 +599,7 @@ public class GameScreen implements Screen, Net.HttpResponseListener {
         TextButton hintOk = new TextButton("Ok", skin.get("default", TextButton.TextButtonStyle.class));
         hintOk.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                texture = null;
                 hintWindow.setVisible(false);
             }
         });
@@ -621,7 +643,6 @@ public class GameScreen implements Screen, Net.HttpResponseListener {
 
         Image hintImagelarge =  new Image(new Texture(Gdx.files.internal("images/duck.png")));
         hintImagelarge.setSize( Gdx.graphics.getWidth()/1, Gdx.graphics.getHeight()/1);
-        //hintImagelarge.setRotation(90);
 
         TextButton imageBack = new TextButton("Back", skin.get("default", TextButton.TextButtonStyle.class));
         imageBack.addListener(new ClickListener() {
@@ -670,7 +691,7 @@ public class GameScreen implements Screen, Net.HttpResponseListener {
         };
         Gdx.input.setInputProcessor(stage);
         Gdx.input.setCatchBackKey(true);
-
+        batch = new SpriteBatch();
         createStageActors();
     }
 
@@ -699,35 +720,11 @@ public class GameScreen implements Screen, Net.HttpResponseListener {
         parameters.put("id_aula",String.valueOf(grupo.getId()));
         parameters.put("id_usuario",String.valueOf(userInfo.getId()));
         parameters.put("test",String.valueOf(userInfo.getType()));
-        String url = utilidades.getUrl()+"getDefinitions.php?";
+        String url = utilidades.getUrl()+"getDefinitions2.php?";
         httpsolicitud = new Net.HttpRequest(httpMethod);
         httpsolicitud.setUrl(url);
         httpsolicitud.setContent(HttpParametersUtils.convertHttpParameters(parameters));
         Gdx.net.sendHttpRequest(httpsolicitud,GameScreen.this);
-    }
-
-    public int getImage(byte[] out, String url){
-        InputStream in = null;
-        try {
-            HttpURLConnection conn = null;
-            conn = (HttpURLConnection)new URL(url).openConnection();
-            conn.setDoInput(true);
-            conn.setDoOutput(false);
-            conn.setUseCaches(true);
-            conn.connect();
-            in = conn.getInputStream();
-            int readBytes = 0;
-            while (true) {
-                int length = in.read(out, readBytes, out.length - readBytes);
-                if (length == -1) break;
-                readBytes += length;
-            }
-            return readBytes;
-        } catch (Exception ex) {
-            return 0;
-        } finally {
-            StreamUtils.closeQuietly(in);
-        }
     }
 
     public void sendRate(){
@@ -781,10 +778,8 @@ public class GameScreen implements Screen, Net.HttpResponseListener {
                             final String defHint = stroke.nextToken();
                             final int defIdCat = Integer.parseInt(stroke.nextToken());
                             final int defIdGro = Integer.parseInt(stroke.nextToken());
-                            final String image = stroke.nextToken();
-                            //Gdx.app.log("test", image.toString());
 
-                            game_definitions.add(new Definition(defId, defLv, defWord, defArticle, defPhrase, defHint, defIdCat, defIdGro, image));
+                            game_definitions.add(new Definition(defId, defLv, defWord, defArticle, defPhrase, defHint, defIdCat, defIdGro));
                         }
                         GEngine tmpEngine = new GEngine();
                         tmpEngine.setDefinitions(game_definitions);
@@ -843,6 +838,12 @@ public class GameScreen implements Screen, Net.HttpResponseListener {
         Gdx.gl.glClearColor(0.95f, 0.95f, 0.95f, 1);
         stage.act(delta);
         stage.draw();
+        if(texture != null) {
+            batch.begin();
+            hintImage.setPosition(Gdx.graphics.getWidth() * 0.15f, Gdx.graphics.getHeight() * 0.3f);
+            hintImage.draw(batch, 50f);
+            batch.end();
+        }
     }
 
     @Override
