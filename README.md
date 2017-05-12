@@ -28,6 +28,8 @@ Currently the app supports **English**, **German** and **Spanish** languages.
 
 - Manuel Palomo Duarte: Proyect Coordinator and Original idea (Computer Science departament)
 - Anke Berns: Proyect Participant and Original idea (French and English Studies departament)
+- Ana Bocanegra-Valle: Proyect Participant
+- Maria Dolores Perea Barbera: Proyect Participant
 - Lorena Gutiérrez Madroñal: Proyect Participant (Computer Science departament)
 - Alberto Cejas Sánchez: Developer and Original idea
 - Juan Miguel Ruiz Ladrón: Developer
