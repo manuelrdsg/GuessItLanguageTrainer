@@ -42,3 +42,4 @@ Currently the app supports **English**, **German** and **Spanish** languages.
 - Alicia Garrido Guerrero (French and English Studies departament)
 - Mercedes Paéz Piña (French and English Studies departament)
 - Salvador Reyes Sánchez (French and English Studies departament)
+- Israel Sánchez Bruzón (French and English Studies departament)
