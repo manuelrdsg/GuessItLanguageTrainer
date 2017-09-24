@@ -32,7 +32,6 @@ Currently the app supports **English**, **German** and **Spanish** languages.
 - Nuria Hurtado Rodríguez: Project participant
 - Ana Bocanegra-Valle: project Participant
 - Maria Dolores Perea Barbera: project Participant
-- Lorena Gutiérrez Madroñal: project Participant (Computer Science departament)
 - Alberto Cejas Sánchez: Developer and Original idea
 - Juan Miguel Ruiz Ladrón: Developer
 - Manuel Rodríguez-Sánchez Guerra: Developer
